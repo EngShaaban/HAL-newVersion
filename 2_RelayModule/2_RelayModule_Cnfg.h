@@ -14,11 +14,17 @@ typedef enum
 	backward
 }_2relayModulState_t;
 
-typedef struct _2relayModul{
+typedef struct relay
+{
+	u8  relayPort ;
+	u8  relayPin  ;
 
-	struct relay*                    relay_1;
-	struct relay*                    relay_2;
+}Relay_t;
 
+typedef struct _2relayModul
+{
+
+	Relay_t   arr[2];
 
 	void (*off)(struct _2relayModul*);
 	void (*forwardDir)(struct _2relayModul*);

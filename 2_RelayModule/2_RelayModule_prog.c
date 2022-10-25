@@ -8,6 +8,8 @@
 #include "../../LIB/STD_TYPES.h"
 #include "../../LIB/errorStates.h"
 
+#include"../../MCAL/DIO/DIO_interface.h"
+
 #include"2_RelayModule_private.h"
 #include"2_RelayModule_Cnfg.h"
 
@@ -17,24 +19,46 @@
 
 //relayMod1 =  _2RelayModule_Constructor(u8 port1_ID,u8 pin1_ID,u8 port2_ID,u8 pin2_ID)
 
-//relayMod1.off(&relayMod1).
-void  _2relayModul_off(_2RelayModule_t*  ref2relayMod);
-void  _2relayModul_forwardDir(_2RelayModule_t*  ref2relayMod);
-void  _2relayModul_backwardDir(_2RelayModule_t*  ref2relayMod);
+//relayMod1.Off(&relayMod1);
+
+void Off(struct  _2relayModul*   ref)
+{
+	DIO_enuSetPinValue(ref->arr[0].relayPort,ref->arr[0].relayPin,DIO_HIGH);
+	DIO_enuSetPinValue(ref->arr[1].relayPort,ref->arr[1].relayPin,DIO_HIGH);
+}
+void forwardDir(struct _2relayModul*  ref )
+{
+	DIO_enuSetPinValue(ref->arr[0].relayPort,ref->arr[0].relayPin,DIO_HIGH);
+	DIO_enuSetPinValue(ref->arr[1].relayPort,ref->arr[1].relayPin,DIO_LOW);
+}
+void backwardDir(struct _2relayModul* ref)
+{
+	DIO_enuSetPinValue(ref->arr[0].relayPort,ref->arr[0].relayPin,DIO_LOW);
+	DIO_enuSetPinValue(ref->arr[1].relayPort,ref->arr[1].relayPin,DIO_HIGH);
+}
 
 _2RelayModule_t  _2RelayModule_Constructor(u8 port1_ID,u8 pin1_ID,u8 port2_ID,u8 pin2_ID)
 {
 	_2RelayModule_t  RelayModule;
 
-	RelayModule.relay_1   = relayConstructor(port1_ID,pin1_ID);
-	RelayModule.relay_1->relayInit(RelayModule.relay_1);
+	RelayModule.arr[0].relayPort= port1_ID;
+	RelayModule.arr[0].relayPin= pin1_ID;
 
-	RelayModule.relay_2   = relayConstructor(port2_ID,pin2_ID);
-	RelayModule.relay_2->relayInit(RelayModule.relay_2);
+	RelayModule.arr[1].relayPort= port2_ID;
+	RelayModule.arr[1].relayPin= pin2_ID;
 
-	RelayModule.off = _2relayModul_off;
-	RelayModule.forwardDir = _2relayModul_forwardDir;
-	RelayModule.backwardDir=_2relayModul_backwardDir;
+	/*************************************/
+	DIO_enuSetPinDirection(RelayModule.arr[0].relayPort,RelayModule.arr[0].relayPin,DIO_OUTPUT_PIN);
+	DIO_enuSetPinDirection(RelayModule.arr[1].relayPort,RelayModule.arr[1].relayPin,DIO_OUTPUT_PIN);
+
+	DIO_enuSetPinValue(RelayModule.arr[0].relayPort,RelayModule.arr[0].relayPin,DIO_HIGH);
+	DIO_enuSetPinValue(RelayModule.arr[1].relayPort,RelayModule.arr[1].relayPin,DIO_HIGH);
+
+	/*************************************/
+
+	RelayModule.off = Off ;
+	RelayModule.forwardDir=forwardDir;
+	RelayModule.backwardDir=backwardDir;
 
 	return 	RelayModule;
 
