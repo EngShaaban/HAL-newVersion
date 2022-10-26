@@ -26,8 +26,8 @@
  *******************************************************************************/
 void Off(struct  _2relayModul const*const  ref)
 {
-	DIO_enuSetPinValue(ref->arr[0].relayPort,ref->arr[0].relayPin,DIO_HIGH);
-	DIO_enuSetPinValue(ref->arr[1].relayPort,ref->arr[1].relayPin,DIO_HIGH);
+	DIO_enuSetPinValue(ref->arr[0].relayPort,ref->arr[0].relayPin,DIO_LOW);
+	DIO_enuSetPinValue(ref->arr[1].relayPort,ref->arr[1].relayPin,DIO_LOW);
 }
 void forwardDir(struct _2relayModul const*const  ref )
 {
